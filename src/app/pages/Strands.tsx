@@ -370,17 +370,17 @@ export function Strands() {
 
       {/* Grid */}
       <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: `repeat(${COLS}, ${CELL_SIZE}px)`,
-          gridTemplateRows: `repeat(${ROWS}, ${CELL_SIZE}px)`,
-          gap: "4px",
-          userSelect: "none",
-          touchAction: "none",
-          marginBottom: "1.5rem",
-        }}
-        onMouseLeave={endSelect}
-        onMouseUp={endSelect}
+          style={{
+            display: "grid",
+            gridTemplateColumns: `repeat(${COLS}, ${CELL_SIZE}px)`,
+            gridTemplateRows: `repeat(${ROWS}, ${CELL_SIZE}px)`,
+            gap: "4px",
+            userSelect: "none",
+            touchAction: "none", // prevent default scrolling
+            marginBottom: "1.5rem",
+          }}
+          onMouseLeave={endSelect}
+          onMouseUp={endSelect}
       >
         {GRID_LETTERS.map((row, r) =>
           row.map((letter, c) => {
@@ -419,33 +419,56 @@ export function Strands() {
                     : "#E8D5C4";
 
             return (
-              <div
-                key={`${r},${c}`}
-                onMouseDown={() => startSelect(r, c)}
-                onMouseEnter={() => addToPath(r, c)}
-                onMouseUp={endSelect}
-                style={{
-                  width: CELL_SIZE,
-                  height: CELL_SIZE,
-                  borderRadius: "50%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  background: bgColor,
-                  border: `2px solid ${borderColor}`,
-                  fontSize: "0.95rem",
-                  fontWeight: 700,
-                  color: textColor,
-                  cursor: "pointer",
-                  transition: "all 0.12s",
-                  boxShadow:
-                    state === "selected"
-                      ? "0 0 0 3px rgba(201,168,76,0.3)"
-                      : "none",
-                }}
-              >
-                {letter}
-              </div>
+                <div
+                    key={`${r},${c}`}
+                    onMouseDown={() => startSelect(r, c)}
+                    onMouseEnter={() => addToPath(r, c)}
+                    onMouseUp={endSelect}
+
+                    // Mobile touch support
+                    onTouchStart={(e) => {
+                      e.preventDefault(); // Prevent scrolling
+                      startSelect(r, c);
+                    }}
+                    onTouchMove={(e) => {
+                      e.preventDefault();
+                      const touch = e.touches[0];
+                      const target = document.elementFromPoint(touch.clientX, touch.clientY);
+                      if (!target) return;
+                      const cell = target.closest<HTMLDivElement>("[data-cell]");
+                      if (cell) {
+                        const [tr, tc] = cell.dataset.cell!.split(",").map(Number);
+                        addToPath(tr, tc);
+                      }
+                    }}
+                    onTouchEnd={(e) => {
+                      e.preventDefault();
+                      endSelect();
+                    }}
+
+                    data-cell={`${r},${c}`}
+                    style={{
+                      width: CELL_SIZE,
+                      height: CELL_SIZE,
+                      borderRadius: "50%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      background: bgColor,
+                      border: `2px solid ${borderColor}`,
+                      fontSize: "0.95rem",
+                      fontWeight: 700,
+                      color: textColor,
+                      cursor: "pointer",
+                      transition: "all 0.12s",
+                      boxShadow:
+                          state === "selected"
+                              ? "0 0 0 3px rgba(201,168,76,0.3)"
+                              : "none",
+                    }}
+                >
+                  {letter}
+                </div>
             );
           }),
         )}
