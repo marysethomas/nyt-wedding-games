@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback, useMemo} from "react";
-import { Link } from "react-router";
-import { Delete, RotateCcw } from "lucide-react";
+import {useState, useEffect, useCallback, useMemo} from "react";
+import {Link} from "react-router";
+import {Delete, RotateCcw} from "lucide-react";
 
 // ── Puzzle config ────────────────────────────────────────────────────────────
 // Edit these to change the puzzle
@@ -59,14 +59,14 @@ const VALID_WORDS = [
 ];
 
 const RANKS = [
-  { label: "Beginner", minPct: 0, emoji: "🌱" },
-  { label: "Good Start", minPct: 0.05, emoji: "🌷" },
-  { label: "Moving Up", minPct: 0.15, emoji: "🌸" },
-  { label: "Solid", minPct: 0.3, emoji: "💐" },
-  { label: "Nice", minPct: 0.4, emoji: "💍" },
-  { label: "Great", minPct: 0.5, emoji: "💒" },
-  { label: "Genius", minPct: 0.65, emoji: "💋" },
-  { label: "Queen Bee", minPct: 1, emoji: "🐝" },
+    {label: "Beginner", minPct: 0, emoji: "🌱"},
+    {label: "Good Start", minPct: 0.05, emoji: "🌷"},
+    {label: "Moving Up", minPct: 0.15, emoji: "🌸"},
+    {label: "Solid", minPct: 0.3, emoji: "💐"},
+    {label: "Nice", minPct: 0.4, emoji: "💍"},
+    {label: "Great", minPct: 0.5, emoji: "💒"},
+    {label: "Genius", minPct: 0.65, emoji: "💋"},
+    {label: "Queen Bee", minPct: 1, emoji: "🐝"},
 ];
 
 function findPangrams(words: string[], letters: string[]) {
@@ -106,42 +106,42 @@ function generateHints(words: string[]) {
 }
 
 function wordPoints(word: string): number {
-  if (word.length === 4) return 1;
-  const pts = word.length;
-  const allLetters = new Set([CENTER_LETTER, ...OUTER_LETTERS]);
-  const usesAll = [...allLetters].every((l) =>
-    word.includes(l),
-  );
-  return usesAll ? pts + 7 : pts;
+    if (word.length === 4) return 1;
+    const pts = word.length;
+    const allLetters = new Set([CENTER_LETTER, ...OUTER_LETTERS]);
+    const usesAll = [...allLetters].every((l) =>
+        word.includes(l),
+    );
+    return usesAll ? pts + 7 : pts;
 }
 
 const MAX_SCORE = VALID_WORDS.reduce(
-  (acc, w) => acc + wordPoints(w),
-  0,
+    (acc, w) => acc + wordPoints(w),
+    0,
 );
 
 // Hex positions for the honeycomb
 function hexPos(
-  index: number,
-  cx: number,
-  cy: number,
-  r: number,
+    index: number,
+    cx: number,
+    cy: number,
+    r: number,
 ) {
-  if (index === 0) return { x: cx, y: cy };
-  const angle = (Math.PI / 3) * (index - 1) - Math.PI / 2;
-  return {
-    x: cx + r * Math.cos(angle),
-    y: cy + r * Math.sin(angle),
-  };
+    if (index === 0) return {x: cx, y: cy};
+    const angle = (Math.PI / 3) * (index - 1) - Math.PI / 2;
+    return {
+        x: cx + r * Math.cos(angle),
+        y: cy + r * Math.sin(angle),
+    };
 }
 
 const HEX_SIZE = 38;
 const HEX_PATH = (x: number, y: number, size: number) => {
-  const pts = Array.from({ length: 6 }, (_, i) => {
-    const a = (Math.PI / 3) * i - Math.PI / 6;
-    return `${x + size * Math.cos(a)},${y + size * Math.sin(a)}`;
-  });
-  return `M ${pts.join(" L ")} Z`;
+    const pts = Array.from({length: 6}, (_, i) => {
+        const a = (Math.PI / 3) * i - Math.PI / 6;
+        return `${x + size * Math.cos(a)},${y + size * Math.sin(a)}`;
+    });
+    return `M ${pts.join(" L ")} Z`;
 };
 
 export function SpellingBee() {
@@ -374,21 +374,6 @@ export function SpellingBee() {
                         }}
                         onClick={() => setShowKeyboard(true)}   // <-- add this
                     >
-                    <div
-                        className={`flex items-center gap-0 min-h-[44px] px-3 py-1 ${shake ? "animate-shake" : ""}`}
-                        style={{
-                            background: "#FFF",
-                            border: "2px solid #E8D5C4",
-                            borderRadius: "8px",
-                            minWidth: "200px",
-                            maxWidth: "280px",
-                            justifyContent: "center",
-                            position: "relative",
-                            letterSpacing: "0.1em",
-                            fontSize: "1.3rem",
-                            fontWeight: 700,
-                        }}
-                    >
                         {input.split("").map((ch, i) => (
                             <span
                                 key={i}
@@ -399,8 +384,8 @@ export function SpellingBee() {
                                             : "#2C2422",
                                 }}
                             >
-                {ch}
-              </span>
+                                {ch}
+                              </span>
                         ))}
                         {input === "" && (
                             <span style={{color: "#CCC"}}>|</span>
@@ -412,8 +397,8 @@ export function SpellingBee() {
                                     animation: "blink 1s step-end infinite",
                                 }}
                             >
-                |
-              </span>
+                                |
+                              </span>
                         )}
                     </div>
 
