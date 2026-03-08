@@ -177,6 +177,8 @@ export function SpellingBee() {
         setTimeout(() => setMessage(null), 1800);
     };
 
+    const [showKeyboard, setShowKeyboard] = useState(false);
+
     const submit = useCallback(() => {
         const word = input.toUpperCase();
         if (word.length < 4) {
@@ -356,6 +358,22 @@ export function SpellingBee() {
                 {/* Left: hive + input */}
                 <div className="flex flex-col items-center gap-4 flex-1">
                     {/* Input display */}
+                    <div
+                        className={`flex items-center gap-0 min-h-[44px] px-3 py-1 ${shake ? "animate-shake" : ""}`}
+                        style={{
+                            background: "#FFF",
+                            border: "2px solid #E8D5C4",
+                            borderRadius: "8px",
+                            minWidth: "200px",
+                            maxWidth: "280px",
+                            justifyContent: "center",
+                            position: "relative",
+                            letterSpacing: "0.1em",
+                            fontSize: "1.3rem",
+                            fontWeight: 700,
+                        }}
+                        onClick={() => setShowKeyboard(true)}   // <-- add this
+                    >
                     <div
                         className={`flex items-center gap-0 min-h-[44px] px-3 py-1 ${shake ? "animate-shake" : ""}`}
                         style={{
