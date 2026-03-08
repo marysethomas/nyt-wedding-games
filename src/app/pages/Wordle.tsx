@@ -1,4 +1,4 @@
-import {useState, useEffect, useCallback} from "react";
+import {useState, useEffect, useCallback, useRef} from "react";
 import {Link} from "react-router";
 
 // Valid word list comes from dracos/valid-wordle-words.txt
@@ -14,16 +14,6 @@ const VALID_GUESSES: Set<string> = new Set(
         .map((w) => w.trim().toUpperCase())
         .filter((w) => w.length === 5)
 );
-console.log("Raw word list text:", wordListText);
-
-// If you want to see it as an array of words:
-const wordsArray = wordListText
-    .split("\n")
-    .map((w) => w.trim().toUpperCase())
-    .filter((w) => w.length === 5);
-
-console.log("Word list array:", wordsArray);
-console.log("Total words:", wordsArray.length);
 
 type LetterState =
     | "correct"
@@ -99,7 +89,7 @@ export function WordleGame() {
         Record<string, LetterState>
     >({});
     const [shake, setShake] = useState(false);
-    const [showKeyboard, setShowKeyboard] = useState(false);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const MAX_GUESSES = 6;
 
@@ -191,25 +181,6 @@ export function WordleGame() {
             5 * 300 + 300,
         );
     }, [currentGuess, guesses, gameState, revealed]);
-
-    useEffect(() => {
-        const handler = (e: KeyboardEvent) => {
-            if (gameState !== "playing") return;
-            if (e.key === "Enter") {
-                submitGuess();
-                return;
-            }
-            if (e.key === "Backspace") {
-                setCurrentGuess((p) => p.slice(0, -1));
-                return;
-            }
-            if (/^[a-zA-Z]$/.test(e.key) && currentGuess.length < 5) {
-                setCurrentGuess((p) => [...p, e.key.toUpperCase()]);
-            }
-        };
-        window.addEventListener("keydown", handler);
-        return () => window.removeEventListener("keydown", handler);
-    }, [submitGuess, currentGuess, gameState]);
 
     const onKey = (key: string) => {
         if (gameState !== "playing") return;
@@ -330,6 +301,35 @@ export function WordleGame() {
                 )}
             </div>
 
+            {/* Hidden input for mobile keyboards */}
+            <input
+                ref={inputRef}
+                type="text"
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="characters"
+                spellCheck={false}
+                value={currentGuess.join("")}
+                onChange={(e) => {
+                    const val = e.target.value.toUpperCase().slice(0, 5);
+                    setCurrentGuess(val.split(""));
+                }}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                        submitGuess();
+                    } else if (e.key === "Backspace") {
+                        setCurrentGuess((p) => p.slice(0, -1));
+                    }
+                }}
+                style={{
+                    position: "absolute",
+                    opacity: 0,
+                    pointerEvents: "none",
+                    height: 0,
+                    width: 0,
+                }}
+            />
+
             {/* Grid */}
             <div className="flex flex-col gap-1.5 mb-6">
                 {rows.map(({letters, rowIndex}) => {
@@ -346,7 +346,10 @@ export function WordleGame() {
                                         ? "shake 0.4s ease"
                                         : undefined,
                             }}
-                            onClick={() => setShowKeyboard(true)} // <-- here
+                            onClick={() => {
+                                inputRef.current?.focus();
+                                setShowKeyboard(true);
+                            }}
                         >
                             {letters.map((cell, ci) => {
                                 const isRevealed =

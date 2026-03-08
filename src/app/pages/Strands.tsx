@@ -6,7 +6,6 @@ import {Link} from "react-router";
 const THEME = "WEDDING";
 const THEME_HINT = "What gathers us together";
 
-// Grid letters (8 rows × 6 cols = 48 cells)
 const GRID_LETTERS: string[][] = [
     ["E", "O", "N", "T", "T", "I"],
     ["C", "C", "F", "E", "P", "S"],

@@ -1,4 +1,4 @@
-import {useState, useEffect, useCallback, useMemo} from "react";
+import {useState, useEffect, useCallback, useMemo, useRef} from "react";
 import {Link} from "react-router";
 import {Delete, RotateCcw} from "lucide-react";
 
@@ -177,7 +177,7 @@ export function SpellingBee() {
         setTimeout(() => setMessage(null), 1800);
     };
 
-    const [showKeyboard, setShowKeyboard] = useState(false);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const submit = useCallback(() => {
         const word = input.toUpperCase();
@@ -237,6 +237,7 @@ export function SpellingBee() {
 
     useEffect(() => {
         const handler = (e: KeyboardEvent) => {
+            if (document.activeElement === inputRef.current) return; // ignore if typing in hidden input
             if (e.key === "Enter") {
                 submit();
                 return;
@@ -246,7 +247,7 @@ export function SpellingBee() {
                 return;
             }
             const upper = e.key.toUpperCase();
-            if (/^[A-Z]$/.test(upper)) {  // allow any A-Z letter
+            if (/^[A-Z]$/.test(upper)) {
                 addLetter(upper);
             }
         };
@@ -380,8 +381,27 @@ export function SpellingBee() {
                             fontSize: "1.3rem",
                             fontWeight: 700,
                         }}
-                        onClick={() => setShowKeyboard(true)}   // <-- add this
+                        onClick={() => inputRef.current?.focus()}
                     >
+                        <input
+                            ref={inputRef}
+                            type="text"
+                            value={input}
+                            onChange={(e) =>
+                                setInput(e.target.value.toUpperCase().replace(/[^A-Z]/g, ""))
+                            }
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") submit();
+                                if (e.key === "Backspace") deleteLetter();
+                            }}
+                            style={{
+                                position: "absolute",
+                                opacity: 0,
+                                width: 0,
+                                height: 0,
+                                pointerEvents: "none",
+                            }}
+                        />
                         {input.split("").map((ch, i) => (
                             <span
                                 key={i}
