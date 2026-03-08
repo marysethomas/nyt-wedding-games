@@ -125,6 +125,11 @@ export function Mini() {
   } | null>({ dir: "across", num: 1 });
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Keyboard input for mobile
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [selected]);
+
   const checkWin = (g: string[][]) => {
     for (let r = 0; r < 5; r++) {
       for (let c = 0; c < 5; c++) {
@@ -527,15 +532,18 @@ export function Mini() {
           style={{ outline: "none" }}
         >
           <input
-            ref={inputRef}
-            style={{
-              position: "absolute",
-              opacity: 0,
-              pointerEvents: "none",
-              width: 0,
-              height: 0,
-            }}
-            readOnly
+              ref={inputRef}
+              type="text"
+              inputMode="text"
+              autoComplete="off"
+              autoCorrect="off"
+              spellCheck={false}
+              style={{
+                position: "absolute",
+                opacity: 0,
+                width: 1,
+                height: 1,
+              }}
           />
           <div
             style={{

@@ -479,6 +479,11 @@ export function CrosswordGame() {
   >({});
   const [showCorrect, setShowCorrect] = useState(false);
 
+  // Keyboard input for mobile
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [selected]);
+
   // ── Responsive cell sizing ─────────────────────────────────────────────────
   useEffect(() => {
     const update = () => {
@@ -936,15 +941,18 @@ export function CrosswordGame() {
               }}
             >
               <input
-                ref={inputRef}
-                style={{
-                  position: "absolute",
-                  opacity: 0,
-                  pointerEvents: "none",
-                  width: 0,
-                  height: 0,
-                }}
-                readOnly
+                  ref={inputRef}
+                  type="text"
+                  inputMode="text"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  spellCheck={false}
+                  style={{
+                    position: "absolute",
+                    opacity: 0,
+                    width: 1,
+                    height: 1,
+                  }}
               />
               <div
                 style={{
