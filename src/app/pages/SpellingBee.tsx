@@ -181,20 +181,27 @@ export function SpellingBee() {
 
     const submit = useCallback(() => {
         const word = input.toUpperCase();
+        const allowed = new Set(LETTERS); // CENTER_LETTER + outer letters
         if (word.length < 4) {
-            showMessage("Too short!", "err");
+            showMessage("Too short", "err");
+            setShake(true);
+            setTimeout(() => setShake(false), 400);
+            return;
+        }
+        if (![...word].every((ch) => allowed.has(ch))) {
+            showMessage("Wrong letters", "err");
             setShake(true);
             setTimeout(() => setShake(false), 400);
             return;
         }
         if (!word.includes(CENTER_LETTER)) {
-            showMessage(`Must use ${CENTER_LETTER}!`, "err");
+            showMessage(`Must use ${CENTER_LETTER}`, "err");
             setShake(true);
             setTimeout(() => setShake(false), 400);
             return;
         }
         if (found.includes(word)) {
-            showMessage("Already found!", "info");
+            showMessage("Already found", "info");
             return;
         }
         if (
@@ -239,8 +246,9 @@ export function SpellingBee() {
                 return;
             }
             const upper = e.key.toUpperCase();
-            const allLetters = [CENTER_LETTER, ...OUTER_LETTERS];
-            if (allLetters.includes(upper)) addLetter(upper);
+            if (/^[A-Z]$/.test(upper)) {  // allow any A-Z letter
+                addLetter(upper);
+            }
         };
         window.addEventListener("keydown", handler);
         return () => window.removeEventListener("keydown", handler);
