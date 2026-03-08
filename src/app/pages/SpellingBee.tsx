@@ -36,7 +36,6 @@ const VALID_WORDS = [
     "ENCORE",
     "ERROR",
     "EYRE",
-    "MEER",
     "MEMORY",
     "MERCY",
     "MERE",
@@ -66,7 +65,7 @@ const RANKS = [
   { label: "Solid", minPct: 0.3, emoji: "💐" },
   { label: "Nice", minPct: 0.4, emoji: "💍" },
   { label: "Great", minPct: 0.5, emoji: "💒" },
-  { label: "Amazing", minPct: 0.65, emoji: "💋" },
+  { label: "Genius", minPct: 0.65, emoji: "💋" },
   { label: "Queen Bee", minPct: 1, emoji: "🐝" },
 ];
 
@@ -617,25 +616,11 @@ export function SpellingBee() {
                 <div className="hint-panel">
 
                     <div className="hint-header">
-                        <div className="hint-progress">
-                            {found.length} / {VALID_WORDS.length} words found
-                        </div>
-
                         {pangrams.length > 0 && (
                             <div className="pangram-indicator">
-                                Pangram{pangrams.length > 1 ? "s" : ""}:{" "}
-                                {pangrams.map((p) => (
-                                    <span
-                                        key={p}
-                                        className={
-                                            found.includes(p.toLowerCase())
-                                                ? "pangram-found"
-                                                : "pangram-hidden"
-                                        }
-                                    >
-                    {found.includes(p.toLowerCase()) ? p : "••••••"}
-                  </span>
-                                ))}
+                                Words: {VALID_WORDS.length},{" "}
+                                Points: {MAX_SCORE},{" "}
+                                Pangrams: {pangrams.length}
                             </div>
                         )}
                     </div>
@@ -701,15 +686,9 @@ export function SpellingBee() {
           margin-bottom:1rem;
         }
 
-        .hint-progress{
-          font-weight:600;
-          color:#3b2f2a;
-          font-size:0.9rem;
-        }
-
         .pangram-indicator{
           margin-top:0.35rem;
-          font-size:0.8rem;
+          font-size:1.1rem;
           color:#7a5d4c;
         }
 
@@ -767,7 +746,7 @@ export function SpellingBee() {
           padding:3px 9px;
           border-radius:999px;
           background:#f2e6d7;
-          font-size:0.75rem;
+          font-size:0.8rem;
         }
 
         .pair{
