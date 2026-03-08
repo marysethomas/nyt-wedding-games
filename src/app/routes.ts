@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router";
+import { createHashRouter } from "react-router";
 import { Root } from "./components/Root";
 import { Home } from "./pages/Home";
 import { SpellingBee } from "./pages/SpellingBee";
@@ -8,7 +8,7 @@ import { Strands } from "./pages/Strands";
 import { Connections } from "./pages/Connections";
 import { CrosswordGame } from "./pages/Crossword";
 
-export const router = createBrowserRouter([
+export const router = createHashRouter([
   {
     path: "/",
     Component: Root,
@@ -23,7 +23,4 @@ export const router = createBrowserRouter([
     ],
   },
 ],
-{
-  basename: "/nyt-wedding-games/",
-}
 );
