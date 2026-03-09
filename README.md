@@ -8,6 +8,6 @@ Customizable NYT games for a wedding or anything else:
 - Wordle
 - Full-sized crossword
 
-Easy to host via Github Pages. Feel free to reach out for help.
+Website can be hosted easily with Github Pages.
 
 Created with Figma
